@@ -1,33 +1,44 @@
 from scapy.all import ARP, Ether, srp
+import mysql.connector
 
 import json
-
-
-def split_ip(ip):
-    return tuple(int(part) for part in ip.split('.'))
-
-
-def get_sort_key(item):
-    return split_ip(item['ip'])
-
 
 with open("configs.json") as file:
     configs = json.load(file)
 
-target_ip = configs["network_address"]
-arp = ARP(pdst=target_ip)
-ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-packet = ether/arp
 
-result = srp(packet, timeout=3, verbose=0)[0]
+def main():
+    target_ip = configs["network_address"]
+    arp = ARP(pdst=target_ip)
+    ether = Ether(dst="ff:ff:ff:ff:ff:ff")
+    packet = ether/arp
 
-clients = []
+    result = srp(packet, timeout=3, verbose=0)[0]
 
-for sent, received in result:
-    clients.append({'ip': received.psrc, 'mac': received.hwsrc})
+    clients = []
 
-clients = sorted(clients, key=get_sort_key)
+    for sent, received in result:
+        clients.append({'ip': received.psrc, 'mac': received.hwsrc})
 
-print("IP" + " "*18+"MAC")
-for client in clients:
-    print("{:16}    {}".format(client['ip'], client['mac']))
+    clients = sorted(clients, key=lambda item: tuple(int(part) for part in item['ip'].split('.')))
+
+    db = mysql.connector.connect(**configs['mysql'])
+    cursor = db.cursor(dictionary=True)
+
+    cursor.execute("SELECT mac_address FROM hosts")
+    hosts_in_database = cursor.fetchall()
+    mac_addresses = [host['mac_address'] for host in hosts_in_database]
+
+    for client in clients:
+        if client['mac'] not in mac_addresses:
+            cursor.execute("INSERT INTO hosts (ip_address, mac_address) VALUES (%s, %s)", [client['ip'], client['mac']])
+        else:
+            cursor.execute("UPDATE hosts SET last_detected = CURRENT_TIMESTAMP(), ip_address = %s WHERE mac_address = %s", [client['ip'], client['mac']])
+
+    db.commit()
+    cursor.close()
+    db.close()
+
+
+if __name__ == '__main__':
+    main()
