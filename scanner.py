@@ -43,13 +43,15 @@ def main():
     cursor.executemany("INSERT INTO hosts (ip_address, mac_address) VALUES (%s, %s)", new_hosts)
     cursor.executemany("UPDATE hosts SET last_detected = CURRENT_TIMESTAMP(), ip_address = %s WHERE mac_address = %s", known_hosts)
 
-    cursor.execute("SELECT * FROM hosts WHERE manufacturer = ''")
+    cursor.execute("SELECT * FROM hosts WHERE manufacturer IS NULL")
     hosts_to_update = []
     for host in cursor.fetchall():
         try:
             r = requests.get(f'https://api.macvendors.com/{host["mac_address"]}')
             if r.status_code == 200:
                 hosts_to_update.append([r.text, host["mac_address"]])
+            elif r.status_code == 404:
+                hosts_to_update.append(["", host["mac_address"]])
         except Exception:
             pass
         time.sleep(1.5)
