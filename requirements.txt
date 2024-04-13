@@ -1,2 +1,3 @@
 scapy
 mysql-connector-python
+requests

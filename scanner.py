@@ -1,7 +1,9 @@
 from scapy.all import ARP, Ether, srp
 import mysql.connector
+import requests
 
 import json
+import time
 
 with open("configs.json") as file:
     configs = json.load(file)
@@ -29,11 +31,29 @@ def main():
     hosts_in_database = cursor.fetchall()
     mac_addresses = [host['mac_address'] for host in hosts_in_database]
 
+    new_hosts = []
+    known_hosts = []
+
     for client in clients:
         if client['mac'] not in mac_addresses:
-            cursor.execute("INSERT INTO hosts (ip_address, mac_address) VALUES (%s, %s)", [client['ip'], client['mac']])
+            new_hosts.append([client['ip'], client['mac']])
         else:
-            cursor.execute("UPDATE hosts SET last_detected = CURRENT_TIMESTAMP(), ip_address = %s WHERE mac_address = %s", [client['ip'], client['mac']])
+            known_hosts.append([client['ip'], client['mac']])
+
+    cursor.executemany("INSERT INTO hosts (ip_address, mac_address) VALUES (%s, %s)", new_hosts)
+    cursor.executemany("UPDATE hosts SET last_detected = CURRENT_TIMESTAMP(), ip_address = %s WHERE mac_address = %s", known_hosts)
+
+    cursor.execute("SELECT * FROM hosts WHERE manufacturer = ''")
+    hosts_to_update = []
+    for host in cursor.fetchall():
+        try:
+            r = requests.get(f'https://api.macvendors.com/{host["mac_address"]}')
+            if r.status_code == 200:
+                hosts_to_update.append([r.text, host["mac_address"]])
+        except Exception:
+            pass
+        time.sleep(1.5)
+    cursor.executemany("UPDATE hosts SET manufacturer = %s WHERE mac_address = %s", hosts_to_update)
 
     db.commit()
     cursor.close()
