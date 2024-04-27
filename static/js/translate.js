@@ -1,10 +1,20 @@
-const textTranslations = [];
+const textTranslations = [
+    "Zaloguj się",
+    "Nazwa użytkownika",
+    "Hasło",
+    "Błędna nazwa użytkownika lub hasło",
+    "Wystąpił błąd",
+];
 
 const titleTranslations = {
-    "Network Monitor": "Network Monitor"
+    "Network Monitor": "Network Monitor",
+    "Log in": "Zaloguj się",
 };
 
-const placeholdersTranslations = {};
+const placeholdersTranslations = {
+    "Username": "Nazwa użytkownika",
+    "Password": "Hasło",
+};
 
 const alternativeTextTranslations = {};
 

@@ -2,3 +2,5 @@ scapy
 mysql-connector-python
 requests
 Flask
+flask-login
+argon2-cffi
