@@ -10,6 +10,8 @@ const textTranslations = [
     "Zapisz",
     "E-mail jest wykorzystywany, aby pobrać twoje zdjęcie profilowe z",
     "Nazwa użytkownika jest zajęta",
+    "Hasła nie są takie same",
+    "Wprowadź ponownie hasło"
 ];
 
 const titleTranslations = {
@@ -21,6 +23,7 @@ const placeholdersTranslations = {
     "Username": "Nazwa użytkownika",
     "Password": "Hasło",
     "E-mail": "E-mail",
+    "Retype password": "Wprowadź ponownie hasło",
 };
 
 const alternativeTextTranslations = {};

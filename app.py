@@ -56,7 +56,7 @@ class User(UserMixin):
         db.commit()
         cursor.close()
         db.close()
-    
+
     def change_username(self, new_username):
         db = mysql.connector.connect(**configs['mysql'])
         cursor = db.cursor(dictionary=True)
@@ -66,7 +66,7 @@ class User(UserMixin):
         db.commit()
         cursor.close()
         db.close()
-    
+
     def change_email(self, new_email):
         db = mysql.connector.connect(**configs['mysql'])
         cursor = db.cursor(dictionary=True)
@@ -161,6 +161,20 @@ def edit_current_user():
 
     if email is not None and email != current_user.email:
         current_user.change_email(email)
+
+    return {"status": "ok"}
+
+
+@app.route("/api/user/password", methods=["PUT"])
+@login_required
+def change_password():
+    password = request.json.get("password")
+    if password is None or password == "":
+        return {"status": "error", "error": "password_required"}
+
+    username = current_user.username
+    current_user.change_password(password)
+    login_user(get_user(username=username))
 
     return {"status": "ok"}
 

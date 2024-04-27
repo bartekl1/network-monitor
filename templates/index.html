@@ -36,7 +36,7 @@
                 </div>
                 <ul class="dropdown-menu" id="user-menu">
                     <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit-user-modal"><span text-id="5">Edit user</span></a></li>
-                    <li><a class="dropdown-item" href="#"><span text-id="6">Change password</span></a></li>
+                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#change-password-modal"><span text-id="6">Change password</span></a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="/logout"><span text-id="7">Log out</span></a></li>
                 </ul>
@@ -74,8 +74,43 @@
                     <div class="modal-footer">
                         <button class="btn btn-primary" id="save-user"><span text-id="8">Save</span></button>
                         <button class="btn btn-primary d-none" id="save-user-loading" disabled>
-                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span class="spinner-border spinner-border-sm"></span>
                             <span text-id="8">Save</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="change-password-modal" data-bs-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="h1 modal-title fs-5"><span text-id="6">Change password</span></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger d-none" id="passwords-not-same">
+                            <span text-id="11">Passwords are not the same</span>
+                        </div>
+                        <div class="alert alert-danger d-none" id="change-password-error-occurred">
+                            <span text-id="4">Error occurred</span>
+                        </div>
+
+                        <div class="form-floating mb-2">
+                            <input type="password" class="form-control" id="password" placeholder="Password" autocomplete="new-password">
+                            <label for="password"><span text-id="2">Password</span></label>
+                        </div>
+                        <div class="form-floating mb-2">
+                            <input type="password" class="form-control" id="retype-password" placeholder="Retype password" autocomplete="new-password">
+                            <label for="retype-password"><span text-id="12">Retype password</span></label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="change-password"><span text-id="6">Change password</span></button>
+                        <button class="btn btn-primary d-none" id="change-password-loading" disabled>
+                            <span class="spinner-border spinner-border-sm"></span>
+                            <span text-id="6">Change password</span>
                         </button>
                     </div>
                 </div>

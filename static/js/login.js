@@ -5,10 +5,10 @@ function login() {
     document.querySelector("#error-occurred").classList.add("d-none");
     document.querySelector("#wrong-username-or-password").classList.add("d-none");
     
-    username == "" ? document.querySelector("#username").classList.add("is-invalid") : document.querySelector("#username").classList.remove("is-invalid");
-    password == "" ? document.querySelector("#password").classList.add("is-invalid") : document.querySelector("#password").classList.remove("is-invalid");
+    username === "" ? document.querySelector("#username").classList.add("is-invalid") : document.querySelector("#username").classList.remove("is-invalid");
+    password === "" ? document.querySelector("#password").classList.add("is-invalid") : document.querySelector("#password").classList.remove("is-invalid");
     
-    if (username == "" || password == "") return;
+    if (username === "" || password === "") return;
     
     document.querySelector("#login").classList.add("d-none");
     document.querySelector("#login-loading").classList.remove("d-none");
