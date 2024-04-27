@@ -26,11 +26,61 @@
         <!-- Windows Phone -->
         <meta name="msapplication-navbutton-color" content="#0d6efd">
     </head>
-    <body>
-        {{ current_user.user_id }}
-        {{ current_user.username }}
+    <body class="bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">Network Monitor</span>
+                <div id="profile-menu" data-bs-toggle="dropdown" data-bs-target="#user-menu">
+                    <span>{{ current_user.username }}</span>
+                    <img src="{{ current_user.profile_picture_url }}" height="40" width="40" id="">
+                </div>
+                <ul class="dropdown-menu" id="user-menu">
+                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#edit-user-modal"><span text-id="5">Edit user</span></a></li>
+                    <li><a class="dropdown-item" href="#"><span text-id="6">Change password</span></a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="/logout"><span text-id="7">Log out</span></a></li>
+                </ul>
+            </div>
+        </nav>
 
-        <a href="/logout">logout</a>
+        <div class="modal fade" id="edit-user-modal" data-bs-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="h1 modal-title fs-5"><span text-id="5">Edit user</span></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="alert alert-danger d-none" id="username-taken">
+                            <span text-id="10">Username taken</span>
+                        </div>
+                        <div class="alert alert-danger d-none" id="edit-user-error-occurred">
+                            <span text-id="4">Error occurred</span>
+                        </div>
+
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control" id="username" placeholder="Username" autocomplete="username" value="{{ current_user.username }}">
+                            <label for="username"><span text-id="1">Username</span></label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="email" class="form-control" id="email" placeholder="E-mail" autocomplete="email" value="{{ current_user.email }}">
+                            <label for="email"><span>E-mail</span></label>
+                            <div class="form-text ms-1">
+                                <span text-id="9">E-mail is used to get your profile picture from</span>
+                                <a href="https://gravatar.com/" target="_blank" rel="noopener noreferrer">Gravatar</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="save-user"><span text-id="8">Save</span></button>
+                        <button class="btn btn-primary d-none" id="save-user-loading" disabled>
+                            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                            <span text-id="8">Save</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="/static/js/translate.js"></script>
         <script src="/static/js/error.js"></script>

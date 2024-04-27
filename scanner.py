@@ -67,7 +67,7 @@ def main():
         cursor.execute("SELECT * FROM hosts WHERE mac_address = %s LIMIT 1", (host[1], ))
         result = cursor.fetchall()
         messages.append({
-            "title": "New host",
+            "title": "New host has connected to the network",
             "color": 255,
             "timestamp": date,
             "fields": [

@@ -8,6 +8,7 @@ import json
 import random
 import time
 import string
+import hashlib
 
 with open("configs.json") as file:
     configs = json.load(file)
@@ -25,6 +26,7 @@ class User(UserMixin):
         self.username = username
         self.password_hash = password_hash
         self.email = email
+        self.profile_picture_url = f"https://gravatar.com/avatar/{hashlib.sha256(self.email.strip().lower().encode('utf-8')).hexdigest()}?s=200&d=mp"
 
     def get_id(self):
         return self.alternative_id
@@ -50,6 +52,26 @@ class User(UserMixin):
         cursor = db.cursor(dictionary=True)
 
         cursor.execute("UPDATE users SET alternative_id = %s, password_hash = %s WHERE id = %s", (self.alternative_id, self.password_hash, self.user_id))
+
+        db.commit()
+        cursor.close()
+        db.close()
+    
+    def change_username(self, new_username):
+        db = mysql.connector.connect(**configs['mysql'])
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute("UPDATE users SET username = %s WHERE id = %s", (new_username, self.user_id))
+
+        db.commit()
+        cursor.close()
+        db.close()
+    
+    def change_email(self, new_email):
+        db = mysql.connector.connect(**configs['mysql'])
+        cursor = db.cursor(dictionary=True)
+
+        cursor.execute("UPDATE users SET email = %s WHERE id = %s", (new_email, self.user_id))
 
         db.commit()
         cursor.close()
@@ -121,6 +143,24 @@ def login_user_api():
         return {"status": "error", "error": "wrong_username_or_password"}
 
     login_user(user, remember=True)
+
+    return {"status": "ok"}
+
+
+@app.route("/api/user", methods=["PUT"])
+@login_required
+def edit_current_user():
+    username = request.json.get("username")
+    email = request.json.get("email")
+
+    if username is not None and username != current_user.username:
+        if get_user(username=username) is None:
+            current_user.change_username(username)
+        else:
+            return {"status": "error", "error": "username_taken"}
+
+    if email is not None and email != current_user.email:
+        current_user.change_email(email)
 
     return {"status": "ok"}
 

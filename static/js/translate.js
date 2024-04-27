@@ -4,6 +4,12 @@ const textTranslations = [
     "Hasło",
     "Błędna nazwa użytkownika lub hasło",
     "Wystąpił błąd",
+    "Edytuj użytkownika",
+    "Zmień hasło",
+    "Wyloguj się",
+    "Zapisz",
+    "E-mail jest wykorzystywany, aby pobrać twoje zdjęcie profilowe z",
+    "Nazwa użytkownika jest zajęta",
 ];
 
 const titleTranslations = {
@@ -14,6 +20,7 @@ const titleTranslations = {
 const placeholdersTranslations = {
     "Username": "Nazwa użytkownika",
     "Password": "Hasło",
+    "E-mail": "E-mail",
 };
 
 const alternativeTextTranslations = {};
