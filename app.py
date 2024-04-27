@@ -19,12 +19,11 @@ login_manager.init_app(app)
 
 
 class User(UserMixin):
-    def __init__(self, user_id, alternative_id, username, password_hash, totp_secret, email):
+    def __init__(self, user_id, alternative_id, username, password_hash, email):
         self.user_id = user_id
         self.alternative_id = alternative_id
         self.username = username
         self.password_hash = password_hash
-        self.totp_secret = totp_secret
         self.email = email
 
     def get_id(self):
@@ -77,7 +76,6 @@ def get_user(alternative_id=None, username=None):
                     alternative_id=result[0]["alternative_id"],
                     username=result[0]["username"],
                     password_hash=result[0]["password_hash"],
-                    totp_secret=result[0]["totp_secret"],
                     email=result[0]["email"])
     return None
 
@@ -125,6 +123,12 @@ def login_user_api():
     login_user(user, remember=True)
 
     return {"status": "ok"}
+
+
+# @app.route("/api/hosts")
+# @login_required
+# def get_hosts_api():
+#     return
 
 
 @app.route("/logout")

@@ -4,6 +4,7 @@ import requests
 
 import json
 import time
+import datetime
 
 with open("configs.json") as file:
     configs = json.load(file)
@@ -58,6 +59,46 @@ def main():
     cursor.executemany("UPDATE hosts SET manufacturer = %s WHERE mac_address = %s", hosts_to_update)
 
     db.commit()
+
+    messages = []
+    date = datetime.datetime.now().isoformat()
+
+    for host in new_hosts:
+        cursor.execute("SELECT * FROM hosts WHERE mac_address = %s LIMIT 1", (host[1], ))
+        result = cursor.fetchall()
+        messages.append({
+            "title": "New host",
+            "color": 255,
+            "timestamp": date,
+            "fields": [
+                {
+                    "name": "IP address:",
+                    "value": result[0]['ip_address'],
+                    "inline": False
+                },
+                {
+                    "name": "MAC address:",
+                    "value": result[0]['mac_address'],
+                    "inline": False
+                },
+                {
+                    "name": "Manufacturer:",
+                    "value": result[0]['manufacturer'],
+                    "inline": False
+                }
+            ]
+        })
+
+    if "discord_webhook_url" in configs.keys():
+        while len(messages) > 0:
+            requests.post(configs["discord_webhook_url"], json={"embeds": messages[:10]})
+            for _ in range(10):
+                try:
+                    messages.pop(0)
+                except IndexError:
+                    break
+            time.sleep(1.5)
+
     cursor.close()
     db.close()
 
