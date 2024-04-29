@@ -131,11 +131,13 @@ def get_hosts():
     cursor.close()
     db.close()
 
-    return [Host(host_id=r["id"], ip_address=r["ip_address"],
-                 mac_address=r["mac_address"], description=r["description"],
-                 icon=r["icon"], manufacturer=r["manufacturer"],
-                 known=r["known"], first_detected=r["first_detected"],
-                 last_detected=r["last_detected"]) for r in result]
+    hosts = [Host(host_id=r["id"], ip_address=r["ip_address"],
+                  mac_address=r["mac_address"], description=r["description"],
+                  icon=r["icon"], manufacturer=r["manufacturer"],
+                  known=r["known"], first_detected=r["first_detected"],
+                  last_detected=r["last_detected"]) for r in result]
+    hosts = sorted(hosts, key=lambda item: tuple(int(part) for part in item.ip_address.split('.')))
+    return hosts
 
 
 def get_host(mac_address):
@@ -243,12 +245,12 @@ def set_known_host_api(mac_address):
 
     if host is None:
         return {"status": "error", "error": "host_not_found"}
-    
+
     yes = request.json.get("yes")
 
     if yes != True and yes != False:
         return {"status": "error", "error": "value_required"}
-    
+
     host.set_known(yes)
 
     return {"status": "ok"}
