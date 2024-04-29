@@ -1,0 +1,13 @@
+# /etc/systemd/system/network-monitor.service
+
+[Unit]
+Description=Network Monitor
+After=network.target
+
+[Service]
+WorkingDirectory=/path/to/repo
+ExecStart=/usr/bin/python3 /path/to/repo/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

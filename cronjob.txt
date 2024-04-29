@@ -1,0 +1,1 @@
+*/2 * * * * cd /path/to/repo && python3 scanner.py
