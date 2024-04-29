@@ -114,6 +114,14 @@ class Host:
         self.first_detected = first_detected
         self.last_detected = last_detected
 
+    def set_known(self, yes):
+        db = mysql.connector.connect(**configs['mysql'])
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("UPDATE hosts SET known = %s WHERE id = %s", (yes, self.host_id))
+        db.commit()
+        cursor.close()
+        db.close()
+
 
 def get_hosts():
     db = mysql.connector.connect(**configs['mysql'])
@@ -128,6 +136,27 @@ def get_hosts():
                  icon=r["icon"], manufacturer=r["manufacturer"],
                  known=r["known"], first_detected=r["first_detected"],
                  last_detected=r["last_detected"]) for r in result]
+
+
+def get_host(mac_address):
+    db = mysql.connector.connect(**configs['mysql'])
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM hosts WHERE mac_address = %s LIMIT 1", (mac_address, ))
+    result = cursor.fetchall()
+    cursor.close()
+    db.close()
+
+    if len(result) == 1:
+        return Host(host_id=result[0]["id"],
+                    ip_address=result[0]["ip_address"],
+                    mac_address=result[0]["mac_address"],
+                    description=result[0]["description"],
+                    icon=result[0]["icon"],
+                    manufacturer=result[0]["manufacturer"],
+                    known=result[0]["known"],
+                    first_detected=result[0]["first_detected"],
+                    last_detected=result[0]["last_detected"])
+    return None
 
 
 @login_manager.user_loader
@@ -203,6 +232,24 @@ def change_password():
     username = current_user.username
     current_user.change_password(password)
     login_user(get_user(username=username))
+
+    return {"status": "ok"}
+
+
+@app.route("/api/host/known/<mac_address>", methods=["PUT"])
+@login_required
+def set_known_host_api(mac_address):
+    host = get_host(mac_address)
+
+    if host is None:
+        return {"status": "error", "error": "host_not_found"}
+    
+    yes = request.json.get("yes")
+
+    if yes != True and yes != False:
+        return {"status": "error", "error": "value_required"}
+    
+    host.set_known(yes)
 
     return {"status": "ok"}
 

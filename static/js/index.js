@@ -87,5 +87,21 @@ function changePassword() {
     })
 }
 
+function knownHost(mac, yes, e) {
+    e.disabled = true;
+    e.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
+
+    fetch(`/api/host/known/${mac}`,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "PUT",
+            body: JSON.stringify({yes: yes})
+        })
+    .then(() => { window.location.reload(); })
+}
+
 document.querySelector("#save-user").addEventListener("click", editUser);
 document.querySelector("#change-password").addEventListener("click", changePassword);
