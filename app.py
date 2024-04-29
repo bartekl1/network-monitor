@@ -121,11 +121,19 @@ class Host:
         db.commit()
         cursor.close()
         db.close()
-    
+
     def edit(self, icon, description):
         db = mysql.connector.connect(**configs['mysql'])
         cursor = db.cursor(dictionary=True)
         cursor.execute("UPDATE hosts SET icon = %s, description =%s WHERE id = %s", (icon, description, self.host_id))
+        db.commit()
+        cursor.close()
+        db.close()
+
+    def delete(self):
+        db = mysql.connector.connect(**configs['mysql'])
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("DELETE FROM hosts WHERE id = %s", (self.host_id, ))
         db.commit()
         cursor.close()
         db.close()
@@ -263,6 +271,19 @@ def edit_host_api(mac_address):
         return {"status": "error", "error": "description_required"}
 
     host.edit(icon, description)
+
+    return {"status": "ok"}
+
+
+@app.route("/api/host/<mac_address>", methods=["DELETE"])
+@login_required
+def delete_host_api(mac_address):
+    host = get_host(mac_address)
+
+    if host is None:
+        return {"status": "error", "error": "host_not_found"}
+
+    host.delete()
 
     return {"status": "ok"}
 

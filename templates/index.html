@@ -153,6 +153,28 @@
             </div>
         </div>
 
+        <div class="modal fade" id="delete-host-modal" data-bs-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="h1 modal-title fs-5"><span text-id="27">Delete host</span></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="m-0"><span text-id="29">Do you want to delete this host?</span></p>
+                        <p class="m-0"><span text-id="30">Host will be added again if it reconnects to the network.</span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" id="delete-host"><span text-id="28">Delete</span></button>
+                        <button class="btn btn-danger d-none" id="delete-host-loading" disabled>
+                            <span class="spinner-border spinner-border-sm"></span>
+                            <span text-id="28">Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="table-responsive m-3">
             <table class="table table-striped table-hover">
                 <thead>
@@ -190,7 +212,7 @@
                             <button class="btn btn-sm btn-success" onclick="knownHost('{{ host.mac_address }}', true, this)"><i class="bi bi-check-lg"></i></button>
                             {% endif %}
                             <button class="btn btn-sm btn-primary" onclick="prepareEditHost('{{ host.mac_address }}', '{{ host.icon }}', '{{ host.description }}')" data-bs-toggle="modal" data-bs-target="#edit-host-modal"><i class="bi bi-pencil-fill"></i></button>
-                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="prepareDeleteHost('{{ host.mac_address }}')" data-bs-toggle="modal" data-bs-target="#delete-host-modal"><i class="bi bi-trash-fill"></i></button>
                         </td>
                     </tr>
                     {% endfor %}

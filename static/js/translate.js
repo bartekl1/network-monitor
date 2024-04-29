@@ -26,6 +26,10 @@ const textTranslations = [
     "Ikona",
     "Podaj nazwę ikony z biblioteki:",
     "Nie uzywaj przedrostka:",
+    "Usuń hosta",
+    "Usuń",
+    "Czy chcesz usunąć tego hosta?",
+    "Host zostanie dodany ponownie, jeśli się ponownie połączy z siecią."
 ];
 
 const titleTranslations = {

@@ -128,5 +128,25 @@ function editHost(mac) {
     .then(() => { window.location.reload(); })
 }
 
+function prepareDeleteHost(mac) {
+    document.querySelector("#delete-host").onclick = () => { deleteHost(mac); };
+}
+
+function deleteHost(mac) {
+    console.log(mac)
+    document.querySelector("#delete-host").classList.add("d-none");
+    document.querySelector("#delete-host-loading").classList.remove("d-none");
+
+    fetch(`/api/host/${mac}`,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "DELETE"
+        })
+    .then(() => { window.location.reload(); })
+}
+
 document.querySelector("#save-user").addEventListener("click", editUser);
 document.querySelector("#change-password").addEventListener("click", changePassword);
