@@ -11,7 +11,17 @@ const textTranslations = [
     "E-mail jest wykorzystywany, aby pobrać twoje zdjęcie profilowe z",
     "Nazwa użytkownika jest zajęta",
     "Hasła nie są takie same",
-    "Wprowadź ponownie hasło"
+    "Wprowadź ponownie hasło",
+    "Opis",
+    "Adres IP",
+    "Adres MAC",
+    "Producent",
+    "Znany",
+    "Wykryto pierwszy raz",
+    "Wykryto ostatni raz",
+    "Opcje",
+    "Tak",
+    "Nie",
 ];
 
 const titleTranslations = {

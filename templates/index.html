@@ -117,6 +117,51 @@
             </div>
         </div>
 
+        <div class="table-responsive m-3">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"><span text-id="13">Description</span></th>
+                        <th scope="col"><span text-id="14">IP address</span></th>
+                        <th scope="col"><span text-id="15">MAC address</span></th>
+                        <th scope="col"><span text-id="16">Manufacturer</span></th>
+                        <th scope="col"><span text-id="17">Known</span></th>
+                        <th scope="col"><span text-id="18">First detected</span></th>
+                        <th scope="col"><span text-id="19">Last detected</span></th>
+                        <th scope="col"><span text-id="20">Options</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for host in get_hosts() %}
+                    <tr>
+                        <th scope="row"><i class="bi bi-{{ host.icon }}"></i></th>
+                        <td>{{ host.description }}</td>
+                        <td>{{ host.ip_address }}</td>
+                        <td>{{ host.mac_address }}</td>
+                        <td>{{ host.manufacturer }}</td>
+                        {% if host.known %}
+                        <td class="text-success"><i class="bi bi-check-lg"></i> <span text-id="21">Yes</span></td>
+                        {% else %}
+                        <td class="text-danger"><i class="bi bi-x-lg"></i> <span text-id="22">No</span></td>
+                        {% endif %}
+                        <td>{{ host.first_detected }}</td>
+                        <td>{{ host.last_detected }}</td>
+                        <td>
+                            {% if host.known %}
+                            <button class="btn btn-sm btn-danger"><i class="bi bi-x-lg"></i></button>
+                            {% else %}
+                            <button class="btn btn-sm btn-success"><i class="bi bi-check-lg"></i></button>
+                            {% endif %}
+                            <button class="btn btn-sm btn-primary"><i class="bi bi-pencil-fill"></i></button>
+                            <button class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i></button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
         <script src="/static/js/translate.js"></script>
         <script src="/static/js/error.js"></script>
         

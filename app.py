@@ -102,6 +102,34 @@ def get_user(alternative_id=None, username=None):
     return None
 
 
+class Host:
+    def __init__(self, host_id, ip_address, mac_address, description, icon, manufacturer, known, first_detected, last_detected):
+        self.host_id = host_id
+        self.ip_address = ip_address
+        self.mac_address = mac_address
+        self.description = description
+        self.icon = icon
+        self.manufacturer = manufacturer
+        self.known = known
+        self.first_detected = first_detected
+        self.last_detected = last_detected
+
+
+def get_hosts():
+    db = mysql.connector.connect(**configs['mysql'])
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM hosts")
+    result = cursor.fetchall()
+    cursor.close()
+    db.close()
+
+    return [Host(host_id=r["id"], ip_address=r["ip_address"],
+                 mac_address=r["mac_address"], description=r["description"],
+                 icon=r["icon"], manufacturer=r["manufacturer"],
+                 known=r["known"], first_detected=r["first_detected"],
+                 last_detected=r["last_detected"]) for r in result]
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return get_user(alternative_id=user_id)
@@ -120,7 +148,7 @@ def manifest():
 @app.route("/")
 @login_required
 def index():
-    return render_template("index.html")
+    return render_template("index.html", get_hosts=get_hosts)
 
 
 @app.route("/login")
@@ -177,12 +205,6 @@ def change_password():
     login_user(get_user(username=username))
 
     return {"status": "ok"}
-
-
-# @app.route("/api/hosts")
-# @login_required
-# def get_hosts_api():
-#     return
 
 
 @app.route("/logout")
