@@ -22,6 +22,10 @@ const textTranslations = [
     "Opcje",
     "Tak",
     "Nie",
+    "Edytuj hosta",
+    "Ikona",
+    "Podaj nazwę ikony z biblioteki:",
+    "Nie uzywaj przedrostka:",
 ];
 
 const titleTranslations = {
@@ -34,6 +38,8 @@ const placeholdersTranslations = {
     "Password": "Hasło",
     "E-mail": "E-mail",
     "Retype password": "Wprowadź ponownie hasło",
+    "Icon": "Ikona",
+    "Description": "Opis",
 };
 
 const alternativeTextTranslations = {};

@@ -117,6 +117,42 @@
             </div>
         </div>
 
+        <div class="modal fade" id="edit-host-modal" data-bs-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="h1 modal-title fs-5"><span text-id="23">Edit host</span></span>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-floating mb-2">
+                            <input type="text" class="form-control" id="host-icon" placeholder="Icon">
+                            <label for="host-icon"><span text-id="24">Icon</span></label>
+                            <div class="form-text ms-1">
+                                <span text-id="25">Enter icon name from the library:</span>
+                                <a href="https://icons.getbootstrap.com/" target="_blank" rel="noopener noreferrer">Bootstrap Icons</a>
+                            </div>
+                            <div class="form-text ms-1">
+                                <span text-id="26">Do not use prefix:</span>
+                                <code>bi-</code>
+                            </div>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="host-description" placeholder="Description">
+                            <label for="host-description"><span text-id="13">Description</span></label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" id="save-host"><span text-id="8">Save</span></button>
+                        <button class="btn btn-primary d-none" id="save-host-loading" disabled>
+                            <span class="spinner-border spinner-border-sm"></span>
+                            <span text-id="8">Save</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="table-responsive m-3">
             <table class="table table-striped table-hover">
                 <thead>
@@ -153,7 +189,7 @@
                             {% else %}
                             <button class="btn btn-sm btn-success" onclick="knownHost('{{ host.mac_address }}', true, this)"><i class="bi bi-check-lg"></i></button>
                             {% endif %}
-                            <button class="btn btn-sm btn-primary"><i class="bi bi-pencil-fill"></i></button>
+                            <button class="btn btn-sm btn-primary" onclick="prepareEditHost('{{ host.mac_address }}', '{{ host.icon }}', '{{ host.description }}')" data-bs-toggle="modal" data-bs-target="#edit-host-modal"><i class="bi bi-pencil-fill"></i></button>
                             <button class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i></button>
                         </td>
                     </tr>

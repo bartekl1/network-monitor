@@ -91,7 +91,7 @@ function knownHost(mac, yes, e) {
     e.disabled = true;
     e.innerHTML = '<span class="spinner-border spinner-border-sm"></span>';
 
-    fetch(`/api/host/known/${mac}`,
+    fetch(`/api/host/${mac}/known`,
         {
             headers: {
                 'Accept': 'application/json',
@@ -99,6 +99,31 @@ function knownHost(mac, yes, e) {
             },
             method: "PUT",
             body: JSON.stringify({yes: yes})
+        })
+    .then(() => { window.location.reload(); })
+}
+
+function prepareEditHost(mac, icon, description) {
+    document.querySelector("#host-icon").value = icon;
+    document.querySelector("#host-description").value = description;
+    document.querySelector("#save-host").onclick = () => { editHost(mac); };
+}
+
+function editHost(mac) {
+    document.querySelector("#save-host").classList.add("d-none");
+    document.querySelector("#save-host-loading").classList.remove("d-none");
+
+    var icon = document.querySelector("#host-icon").value;
+    var description = document.querySelector("#host-description").value;
+
+    fetch(`/api/host/${mac}`,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "PUT",
+            body: JSON.stringify({icon: icon, description: description})
         })
     .then(() => { window.location.reload(); })
 }

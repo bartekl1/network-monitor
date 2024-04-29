@@ -121,6 +121,14 @@ class Host:
         db.commit()
         cursor.close()
         db.close()
+    
+    def edit(self, icon, description):
+        db = mysql.connector.connect(**configs['mysql'])
+        cursor = db.cursor(dictionary=True)
+        cursor.execute("UPDATE hosts SET icon = %s, description =%s WHERE id = %s", (icon, description, self.host_id))
+        db.commit()
+        cursor.close()
+        db.close()
 
 
 def get_hosts():
@@ -238,7 +246,28 @@ def change_password():
     return {"status": "ok"}
 
 
-@app.route("/api/host/known/<mac_address>", methods=["PUT"])
+@app.route("/api/host/<mac_address>", methods=["PUT"])
+@login_required
+def edit_host_api(mac_address):
+    host = get_host(mac_address)
+
+    if host is None:
+        return {"status": "error", "error": "host_not_found"}
+
+    icon = request.json.get("icon")
+    description = request.json.get("description")
+
+    if icon is None:
+        return {"status": "error", "error": "icon_required"}
+    if description is None:
+        return {"status": "error", "error": "description_required"}
+
+    host.edit(icon, description)
+
+    return {"status": "ok"}
+
+
+@app.route("/api/host/<mac_address>/known", methods=["PUT"])
 @login_required
 def set_known_host_api(mac_address):
     host = get_host(mac_address)
@@ -248,7 +277,7 @@ def set_known_host_api(mac_address):
 
     yes = request.json.get("yes")
 
-    if yes != True and yes != False:
+    if yes is None:
         return {"status": "error", "error": "value_required"}
 
     host.set_known(yes)
